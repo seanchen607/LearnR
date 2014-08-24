@@ -26,7 +26,10 @@
 
 - `locator()`图上取点的位置。
 
-- 查看当前时间 `date()`, `Sys.time()`,lubridate包中的now().
+- 查看当前时间 `date()`, `Sys.time()`,lubridate包中的`now()`.
+
+- 排序相关的函数sort(),rank(),order()。    
+  sort(x)是对向量x进行排序，返回值排序后的数值向量。rank()是求秩的函数，它的返回值是这个向量中对应元素的“排名”。而order()的返回值是对应“排名”的元素所在向量中的位置。
 
 ## R中的一些小技巧
 
@@ -74,7 +77,7 @@ rm(pkgs)                                       # Clean up our temp variable
 df <- read.table(textConnection('1,23\n1,23'),sep=',')
 ```
 
-- 画图时坐标轴的排序方式，B、C、A会排成A、B、C，使用下面方法来校正
+- 画图时坐标轴的排序方式，B,C,A会排成A,B,C，使用下面方法来校正
 ```r
 a$name <- factor(a$name, levels=unique(a$name))
 levels(a$name) = c('B','C','A')
@@ -147,10 +150,12 @@ text(1, 1, "\\VE", cex = 20, vfont = c("serif", "plain"))
 
 - 时间处理,lubridate包  
 时间格式  
+
 >POSIXct is just a very large integer under the hood;it use a useful class when you want to store times in something like a data frame   
 >POSIXct, which stores seconds since UNIX epoch (+some other data)   
 >POSIXlt is a list underneath and it stores a bunch of other useful information like the day of the week,day of the year,month,day of the month  
->POSIXlt, which stores a list of day, month, year, hour, minute, second, etc.   
+>POSIXlt, which stores a list of day, month, year, hour, minute, second, etc. 
+  
 ```r
 x <- Sys.time()
 class(x) ## Already in `POSIXct' format  
@@ -178,7 +183,8 @@ age = new_interval(ymd('1989-09-27'), now()) / duration(num = 1, units = "years"
 ```
 
 - 将缺失值替换为前一个数  
-MIfuns这个包里的两个指令：locf 和 reapply.
+zoo包中的`na.locf`函数
+MIfuns这个包里的两个指令：`locf` 和 `reapply`.
 ```r
 x1 <- data.frame(subject = c("a", "a", "b", "b"),
                  time = c(1,2,1,2),
@@ -194,6 +200,7 @@ x2 <- transform(
                )
       )
 ```
+
 
 
 

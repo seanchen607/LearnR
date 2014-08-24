@@ -26,6 +26,8 @@
 
 - `locator()`图上取点的位置。
 
+- 查看当前时间 `date()`, `Sys.time()`,lubridate包中的now().
+
 ## R中的一些小技巧
 
 - 将数字转化位因子 
@@ -89,6 +91,7 @@ A <- matrix(scan("matrix.dat", n = 200*2000), 200, 2000, byrow = TRUE)
 > [ always returns an object of the same class as the original; can be used to select more than one element (there is one exception)  
 > [[ is used to extract elements of a list or a data frame; it can only be used to extract a single element and the class of the returned object will not necessarily be a list or data frame  
 > $ is used to extract elements of a list or data frame by name; semantics are similar to hat of [[.  
+`sapply(name,"[",2) ` 
 
 - 编写函数时，参数中有...的作用  
 > The ... argument indicate a variable number of arguments that are usually passed on to other functions  
@@ -96,7 +99,7 @@ A <- matrix(scan("matrix.dat", n = 200*2000), 200, 2000, byrow = TRUE)
 > One catch with ... is that any arguments that appear after ... on the argument list must be named explicitly and cannot be partially matched.
 
 - 查找index  
-The function match works on vectors :
+  The function match works on vectors :
 ```r
 x <- sample(1:10)
 x
@@ -104,8 +107,8 @@ x
 match(c(4,8),x)
 # [1] 1 5
 ```
-match only returns the first encounter of a match, as you requested.  
-For multiple matching, %in% is the way to go:  
+  match only returns the first encounter of a match,as you requested.  
+  For multiple matching, %in% is the way to go:  
 ```r
 x <- sample(1:4,10,replace=T)
 x
@@ -123,16 +126,11 @@ eval(parse(text = a))
 
 - ubuntu下安装R包，`apt-get install r-cran-rmysql`自动解决各种依赖
 
-- 计算年龄,lubridate包  
-```r
-age = new_interval(bd, now) / duration(num = 1, units = "months")
-```
-
 - 统计分布  
->d for density
->r for random number generation
->p for cumulative distribution
->q for quantile function
+>d for density  
+>r for random number generation  
+>p for cumulative distribution  
+>q for quantile function  
 
 - 一次读取两行，从文件开始处重新读取，使用seek()
 ```r
@@ -147,7 +145,56 @@ plot(1, type = "n")
 text(1, 1, "\\VE", cex = 20, vfont = c("serif", "plain"))
 ```
 
-- 
+- 时间处理,lubridate包  
+时间格式  
+>POSIXct is just a very large integer under the hood;it use a useful class when you want to store times in something like a data frame   
+>POSIXct, which stores seconds since UNIX epoch (+some other data)   
+>POSIXlt is a list underneath and it stores a bunch of other useful information like the day of the week,day of the year,month,day of the month  
+>POSIXlt, which stores a list of day, month, year, hour, minute, second, etc.   
+```r
+x <- Sys.time()
+class(x) ## Already in `POSIXct' format  
+unclass(x)
+x$sec
+## Error: $ operator is invalid for atomic vectors
+p <- as.POSIXlt(x)
+p$sec
+unclass(p)
+```   
+还可以查看min,hour,mday,mon,year,wday,yday, etc  
+
+>strptime()根据你指定的格式控制字符串解读日期。strptime is a function to directly convert character vectors (of a variety of formats) to POSIXlt format.  
+>strftime()则根据你指定的格式控制字符串输出日期。
+
+生成连续的时间
+```r
+seq(ISOdate(2010,1,1), by='day', length=365)
+seq(ymd('2014-01-01'), ymd('2014-03-02'), by = ddays(3))
+```
+
+计算年龄  
+```r
+age = new_interval(ymd('1989-09-27'), now()) / duration(num = 1, units = "years")
+```
+
+- 将缺失值替换为前一个数  
+MIfuns这个包里的两个指令：locf 和 reapply.
+```r
+x1 <- data.frame(subject = c("a", "a", "b", "b"),
+                 time = c(1,2,1,2),
+                 score = c(50, NA, 100, NA)
+                 )
+
+x2 <- transform(
+      x1,
+      score = reapply(
+              score,
+              INDEX = subject,
+              FUN = locf
+               )
+      )
+```
+
 
 
 

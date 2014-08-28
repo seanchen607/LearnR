@@ -10,7 +10,7 @@
 
 - `suppressMessages`隐藏警告信息
 
-- `apropos('lm')`包含lm的函数，支持正则表达式。`ls(pattern='ut')` 包含字符串ut的对象。
+- `apropos('lm', mode = "function)`包含lm的函数，支持正则表达式。`ls(pattern='ut')` 包含字符串ut的对象。
 
 - `capabilities()`
 

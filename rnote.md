@@ -26,10 +26,12 @@
 
 - `locator()`图上取点的位置。
 
-- 查看当前时间 `date()`, `Sys.time()`,lubridate包中的`now()`.
+- 查看当前时间 `date()`, `Sys.time()`,`Sys.Date()`,lubridate包中的`now()`.
 
 - 排序相关的函数sort(),rank(),order()。    
   sort(x)是对向量x进行排序，返回值排序后的数值向量。rank()是求秩的函数，它的返回值是这个向量中对应元素的“排名”。而order()的返回值是对应“排名”的元素所在向量中的位置。
+  
+- `scale`中心化scale(center = T, scale = F), 标准化scale(center = T, scale = T)
 
 ## R中的一些小技巧
 
@@ -130,10 +132,10 @@ eval(parse(text = a))
 - ubuntu下安装R包，`apt-get install r-cran-rmysql`自动解决各种依赖
 
 - 统计分布  
->d for density  
->r for random number generation  
->p for cumulative distribution  
->q for quantile function  
+>d for density  密度函数   
+>r for random number generation  分布函数   
+>p for cumulative distribution  分位数函数   
+>q for quantile function  生成随机数   
 
 - 一次读取两行，从文件开始处重新读取，使用seek()
 ```r
@@ -180,6 +182,9 @@ seq(ymd('2014-01-01'), ymd('2014-03-02'), by = ddays(3))
 计算年龄  
 ```r
 age = new_interval(ymd('1989-09-27'), now()) / duration(num = 1, units = "years")
+
+days <- difftime(as.Date(Sys.Date()), as.Date('1989-09-27'), units='days')
+age <- as.numeric(days) / 365
 ```
 
 - 将缺失值替换为前一个数  

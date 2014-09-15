@@ -210,7 +210,7 @@ x2 <- transform(
 
 `gsub('[^\u4e00-\u9fa5]', '', s)` 将非汉字全部替换为空
 
-- R包`directlabels`给图加标签，比较有用。   
+- R包`directlabels`给图加标签，`ggthemes`提供主题模板，和ggplot2配合着用。   
 
 
 

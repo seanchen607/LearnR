@@ -212,6 +212,17 @@ x2 <- transform(
 
 - R包`directlabels`给图加标签，`ggthemes`提供主题模板，和ggplot2配合着用。   
 
+- read.delim就是在read.table里面设置了几个默认参数  
+```r
+read.table(file, header = TRUE, sep = "\t", quote = "\"", dec = ".", fill = TRUE, comment.char = "")
+```
+可以读取后缀为.data的文件。
 
+- 分组操作
+```r
+h1 <- y77 %>% group_by(lr_c, value_c) %>% do(as.data.frame(table(.$leiji)))
+#or
+h2 <- ddply(y77, c("lr_c", "value_c"), summarise, qj = as.data.frame(table(y77$leiji))[,1], freq = as.data.frame(table(y77$leiji))[,2])
+```
 
 

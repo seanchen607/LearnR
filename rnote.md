@@ -206,10 +206,6 @@ x2 <- transform(
       )
 ```
 
-- R语言中提取字符串中的汉字
-
-`gsub('[^\u4e00-\u9fa5]', '', s)` 将非汉字全部替换为空
-
 - R包`directlabels`给图加标签，`ggthemes`提供主题模板，和ggplot2配合着用。   
 
 - read.delim就是在read.table里面设置了几个默认参数  
@@ -225,4 +221,37 @@ h1 <- y77 %>% group_by(lr_c, value_c) %>% do(as.data.frame(table(.$leiji)))
 h2 <- ddply(y77, c("lr_c", "value_c"), summarise, qj = as.data.frame(table(y77$leiji))[,1], freq = as.data.frame(table(y77$leiji))[,2])
 ```
 
+- 训练了一个模型，`ls(modelFit)`来查看里面有些什么东西。
 
+- 正则表达式 
+
+1、元字符 `. \ | ( ) [ { $ * + ?` 用`\\.`来表示. 用`\\\\`来表示\
+
+2、The truth is that regmatches() is the only function that is designed to work with regex patterns. regmatches() extract or replace matches use with data from regexpr(),
+gregexpr() or regexec()
+
+4、gregexpr() returns a list of the same length as text 
+
+5、可以用sub提取内容，如用\\1提取匹配的第一个组。`sub(pattern, "\\1", text)`
+
+6、```r
+r <- regexec("<dd>[F|f]ound on (.*?)</dd>", homicides)
+m <- regmatches(homicides, r)
+dates <- sapply(m, function(x) x[2])
+```
+
+7、R语言中提取字符串中的汉字
+
+`gsub('[^\u4e00-\u9fa5]', '', s)` 将非汉字全部替换为空
+
+8、匹配括号中的内容
+```r
+r <- regexec("[\\(\\（](.*?)[\\)\\）]", n2$GoodsName)
+#or
+r <- sub('.*\\((.*?)\\).*', '\\1', text)
+m <- regmatches(n2$GoodsName, r)
+n2$colour <- sapply(m, function(x) x[2])
+```
+- 编码
+
+像'ÖÐÎÄ1'这种样子的乱码是因为原来的编码就是GBK，读进来之后要用`iconv(xxx,"GBK","UTF-8")`转成UTF-8，然后就正常了。像'ï»¿ä¸­æ–‡1'这样的乱码说明原文本是UTF-8，但是在当前R环境下Encoding不正常，需要`Encoding(xxx) <- "UTF-8"`，然后再操作

@@ -250,3 +250,19 @@ n2$colour <- sapply(m, function(x) x[2])
 - 编码
 
 像'ÖÐÎÄ1'这种样子的乱码是因为原来的编码就是GBK，读进来之后要用`iconv(xxx,"GBK","UTF-8")`转成UTF-8，然后就正常了。像'ï»¿ä¸­æ–‡1'这样的乱码说明原文本是UTF-8，但是在当前R环境下Encoding不正常，需要`Encoding(xxx) <- "UTF-8"`，然后再操作
+
+- `dplyr`包
+```r
+summarise_each(funs(mean), Cancelled, Diverted) 
+summarise_each(funs(min(., na.rm=TRUE), max(., na.rm=TRUE)), matches("Delay")) #allows you to apply the same summary function to multiple columns at once
+#几个求个数的函数
+top_n()
+n()
+n_distinct()
+#glimpse()类似于str()
+flights %>% sample_n(5) #随机取5个
+flights %>% sample_frac(0.25, replace=TRUE) #随机取四分之一
+row_number(); min_rank()
+select() #use `contains` `starts_with`, `ends_with`, and `matches` (for regular expressions) can be used to match columns by name
+```
+- `Hmisc`中的`cut2`函数可代替cut用。

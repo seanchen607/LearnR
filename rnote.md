@@ -234,12 +234,6 @@ gregexpr() or regexec()
 
 5、可以用sub提取内容，如用\\1提取匹配的第一个组。`sub(pattern, "\\1", text)`
 
-6、```r
-r <- regexec("<dd>[F|f]ound on (.*?)</dd>", homicides)
-m <- regmatches(homicides, r)
-dates <- sapply(m, function(x) x[2])
-```
-
 7、R语言中提取字符串中的汉字
 
 `gsub('[^\u4e00-\u9fa5]', '', s)` 将非汉字全部替换为空
@@ -252,6 +246,7 @@ r <- sub('.*\\((.*?)\\).*', '\\1', text)
 m <- regmatches(n2$GoodsName, r)
 n2$colour <- sapply(m, function(x) x[2])
 ```
+
 - 编码
 
 像'ÖÐÎÄ1'这种样子的乱码是因为原来的编码就是GBK，读进来之后要用`iconv(xxx,"GBK","UTF-8")`转成UTF-8，然后就正常了。像'ï»¿ä¸­æ–‡1'这样的乱码说明原文本是UTF-8，但是在当前R环境下Encoding不正常，需要`Encoding(xxx) <- "UTF-8"`，然后再操作

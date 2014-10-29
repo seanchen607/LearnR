@@ -266,3 +266,13 @@ row_number(); min_rank()
 select() #use `contains` `starts_with`, `ends_with`, and `matches` (for regular expressions) can be used to match columns by name
 ```
 - `Hmisc`中的`cut2`函数可代替cut用。
+
+- 主成分分析
+```r
+pr <- princomp(data, cor = T)
+pr$sdev^2  #特征值
+pr$loadings #特征向量默认小于0.1的不打印除pr$loadings[,1:2]查看
+summary(pr) #贡献率
+pr$scores #主成份得分
+```
+- [Window functions](http://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html)

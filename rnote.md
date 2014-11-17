@@ -276,3 +276,12 @@ summary(pr) #贡献率
 pr$scores #主成份得分
 ```
 - [Window functions](http://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html)
+
+- 最优化函数 optim
+
+- 读取网页数据   
+```r
+library(RCurl)
+x1 <- getURL("https://d396qusza40orc.cloudfront.net/ntumlone%2Fhw4%2Fhw4_train.dat")
+train <- read.table(text = x1)
+```

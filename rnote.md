@@ -33,6 +33,10 @@
   
 - `scale`中心化scale(center = T, scale = F), 标准化scale(center = T, scale = T)
 
+- `eval(parse(text="1+1"))`    
+
+- `setdiff(x,y)` x中有y中没有。
+
 ## R中的一些小技巧
 
 - 将数字转化位因子 
@@ -284,4 +288,19 @@ pr$scores #主成份得分
 library(RCurl)
 x1 <- getURL("https://d396qusza40orc.cloudfront.net/ntumlone%2Fhw4%2Fhw4_train.dat")
 train <- read.table(text = x1)
+```
+
+- `switch`函数相比`if`来说速度更快，而且代码较短、整洁，以后要注意使用。
+
+- 广义线性回归  
+```r
+glm(formula, family=binomial(link="logit"), data) # 逻辑回归
+glm(formula, family=poisson(link="log"), data) # 泊松回归
+glm(formula, family=gaussian(link="identity"), data) # 标准线性模型
+```
+
+- ```r
+library(dplyr)
+batting_tbl %>% count(playerID, wt = G) #等价于
+batting_tbl %>% group_by(playerID) %>% summarise(n=sum(G))
 ```

@@ -9,3 +9,5 @@ $ kill -s 9 1827
 
 $ pgrep firefox | xargs kill -s 9
 ```
+
+- 打开端口8787 `sudo ufw allow 8787`   

@@ -155,6 +155,7 @@ text(1, 1, "\\VE", cex = 20, vfont = c("serif", "plain"))
 ```
 
 - 时间处理,lubridate包  
+[时间处理](https://rpubs.com/jo_irisson/howto_date_time)     
 时间格式  
 
 >POSIXct is just a very large integer under the hood;it use a useful class when you want to store times in something like a data frame   
@@ -290,7 +291,8 @@ x1 <- getURL("https://d396qusza40orc.cloudfront.net/ntumlone%2Fhw4%2Fhw4_train.d
 train <- read.table(text = x1)
 ```
 
-- `switch`函数相比`if`来说速度更快，而且代码较短、整洁，以后要注意使用。
+- `switch`函数相比`if`来说速度更快，而且代码较短、整洁，以后要注意使用。  
+使用ifelse时注意第一个参数是一个向量，而不是标量。   
 
 - 广义线性回归  
 ```r
@@ -299,8 +301,9 @@ glm(formula, family=poisson(link="log"), data) # 泊松回归
 glm(formula, family=gaussian(link="identity"), data) # 标准线性模型
 ```
 
-- ```r
-library(dplyr)
-batting_tbl %>% count(playerID, wt = G) #等价于
-batting_tbl %>% group_by(playerID) %>% summarise(n=sum(G))
+- 频数    
+```r
+library(dplyr)   
+batting_tbl %>% count(playerID, wt = G) #等价于   
+batting_tbl %>% group_by(playerID) %>% summarise(n=sum(G))   
 ```

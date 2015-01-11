@@ -19,16 +19,87 @@ df$V5 <- df$V1 ^2 - 2 * df$V2 - 3
 library(ggplot2)
 ggplot(df, aes(x=V1, y=V2, color=factor(V3))) + geom_point()
 
-svm.fit <- svm(V3 ~ V1 + V2, data = df, kernel = "polynomial", degree=2)
+svm.fit <- svm(V3 ~ V1 + V2, data = df, kernel = "polynomial", degree=2,gamma=1,coef0=1)
 
+md <- ksvm(V3 ~ V1 + V2,data=df,kernel="polydot",kpar=list(degree=2,scale=1,offset=1),
+           scaled=F)
+md@alpha
 y <- matrix(c(y1,y2,y3,y4,y5,y6,y7),7,1)
 x <- rbind(x1,x2,x3,x4,x5,x6,x7)
 xx <- x %*% t(x)
 Q <- y %*% t(y) * (1 + xx)^2 
-Q <- Q + matrix(rep(1, 49)*0.00000001, 7, 7)
+diag(Q) <-diag(Q) + 0.0000001
 
-P <- matrix(rep(-1,7),7,1)
+
+P <- matrix(rep(1,7),1,7)
 
 A <- t(matrix(rep(y,7), 7,7))
  
 c <- matrix(rep(0, 7),7,1)
+
+# library(quadprog)
+solve.QP(Q,P,t(A),c)
+
+svm.fit <- svm(V3 ~ V1 + V2, data = df, kernel = "polynomial", degree=2,gamma=1,coef0=1)
+
+library(RCurl)
+a1 <- getURI("http://www.amlbook.com/data/zip/features.train")
+a2 <- getURI("http://www.amlbook.com/data/zip/features.test")
+train <- read.table(text = a1)
+test <- read.table(text = a2)
+
+library(dplyr)
+# ``0'' versus ``not 0''
+train0 <- train %>% mutate(V1 = ifelse(V1==0, 1, 0))
+
+# ``2'' versus ``not 2''
+train2 <- train %>% mutate(V1 = ifelse(V1==2, 1, 0))
+
+# ``4'' versus ``not 4''
+train4 <- train %>% mutate(V1 = ifelse(V1==4, 1, 0))
+
+# ``6'' versus ``not 6''
+train6 <- train %>% mutate(V1 = ifelse(V1==6, 1, 0))
+
+# ``8'' versus ``not 8'' 
+train8 <- train %>% mutate(V1 = ifelse(V1==8, 1, 0))
+
+s1 <- ksvm(V1 ~ V2 + V3,data=train8,kernel="polydot",kpar=list(degree=2,scale=1,offset=1),
+           C=0.01, scaled=F,type="C-svc")
+sum(s1@alpha[[1]])
+
+
+
+
+s2 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=100,cost=0.001,
+          type="C-classification",scale=F)
+p2 <- predict(s2, test[,-1])
+sum(p2 != test[,1])/nrow(test)
+
+s3 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=100,cost=0.01,
+          type="C-classification",scale=F)
+p3 <- predict(s3, test[,-1])
+sum(p3 != test[,1])/nrow(test)
+
+s4 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=100,cost=0.1,
+          type="C-classification",scale=F)
+p4 <- predict(s4, test[,-1])
+sum(p4 != test[,1])/nrow(test)
+
+s5 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=100,cost=1,
+          type="C-classification",scale=F)
+p5 <- predict(s5, test[,-1])
+sum(p5 != test[,1])/nrow(test)
+
+s6 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=100,cost=10,
+          type="C-classification",scale=F)
+p6 <- predict(s6, test[,-1])
+sum(p6 != test[,1])/nrow(test)
+
+
+
+
+s4 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=1000,cost=0.1,
+          type="C-classification",scale=F)
+p4 <- predict(s4, test[,-1])
+sum(p4 != test[,1])/nrow(test)

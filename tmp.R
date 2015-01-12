@@ -125,3 +125,12 @@ while (i < 100){
   res_r <- c(res_r, rr[which.min(res_rate)])
   i <- i + 1
 }
+
+
+
+svm.fit <- svm(V1 ~ V2 + V3, data = train8, kernel = "polynomial", 
+               degree=2,gamma=1,coef0=1,type="C-classification",
+               cost=0.01, scale=F)
+p <- predict(svm.fit, train8[,-1])
+sum(p != train8[,1])/nrow(train8)
+sum(svm.fit$coefs * train8$V1[svm.fit$index])

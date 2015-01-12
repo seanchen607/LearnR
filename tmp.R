@@ -103,3 +103,25 @@ s4 <- svm(V1 ~ V2 + V3,data=train0,kernel="radial", gamma=1000,cost=0.1,
           type="C-classification",scale=F)
 p4 <- predict(s4, test[,-1])
 sum(p4 != test[,1])/nrow(test)
+
+
+rr <- c(1,10,100,1000,10000)
+
+
+i <- 0
+res_r <- c()
+while (i < 100){
+  ind <- sample(1:nrow(train0), 1000)
+  t0 <- train0[-ind, ]
+  t1 <- train0[ind, ]
+  res_rate <- c()
+  for (r in rr){
+    s4 <- svm(V1 ~ V2 + V3,data=t0,kernel="radial", gamma=r,cost=0.1,
+              type="C-classification",scale=F)
+    p4 <- predict(s4, t1[,-1])
+    rate <- sum(p4 != t1[,1])/nrow(t1)
+    res_rate <- c(res_rate, rate)
+  }
+  res_r <- c(res_r, rr[which.min(res_rate)])
+  i <- i + 1
+}

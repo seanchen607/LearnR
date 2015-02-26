@@ -134,3 +134,28 @@ svm.fit <- svm(V1 ~ V2 + V3, data = train8, kernel = "polynomial",
 p <- predict(svm.fit, train8[,-1])
 sum(p != train8[,1])/nrow(train8)
 sum(svm.fit$coefs * train8$V1[svm.fit$index])
+
+
+
+library(RCurl)
+a1 <- getURI("https://d396qusza40orc.cloudfront.net/ntumltwo/hw2_data/hw2_lssvm_all.dat")
+df <- read.table(text = a1)
+
+train <- df[1:400,]
+test <- df[401:500,]
+train$V11 <- as.factor(train$V11)
+test$V11 <- as.factor(test$V11)
+
+library(kernlab)
+e_in <- c()
+e_out <- c()
+for (sigma in c(32,2,0.125)){
+  for (tau in c(0.001,1,1000)){
+    lir <- lssvm(V11~.,data=train,kernel = "rbfdot",kpar=list(sigma=sigma),
+                 tau=tau, scaled = T)
+    p_in <- predict(lir, train)
+    p_out <- predict(lir, test)
+    e_in <- c(e_in, sum(p_in != train[,11])/400)
+    e_out <- c(e_out, sum(p_out != test[,11])/100)
+  }
+}

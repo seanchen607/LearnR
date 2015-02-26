@@ -307,3 +307,34 @@ library(dplyr)
 batting_tbl %>% count(playerID, wt = G) #等价于   
 batting_tbl %>% group_by(playerID) %>% summarise(n=sum(G))   
 ```
+
+- `dplyr`中group_by完之后，可以用`ungroup`来去掉group的属性。
+
+- `within`可以用来操作数据框，增加变量：
+  ```r
+aq <- within(airquality, {     # Notice that multiple vars can be changed
+    lOzone <- log(Ozone)
+    Month <- factor(month.abb[Month])
+    cTemp <- round((Temp - 32) * 5/9, 1) # From Fahrenheit to Celsius
+    S.cT <- Solar.R / cTemp  # using the newly created variable
+    rm(Day, Temp)})
+  ```
+
+- 微分`deriv` 积分`integrate`
+
+- 对多个变量`group_by`之后写入Excel
+```r
+test <- c("men_n", "PERFUME_n")
+for (t in test){
+  c2 <- c1 %>% group_by(flag,c1[, t]) %>% summarise(f=n_distinct(CONTACT_ID)) %>% as.data.frame
+  names(c2)[2] <- t
+  rownames(c2) <- NULL # Set row.names to FALSE to avoid the first column being row names.
+  write.xlsx(c2, 'test.xlsx', sheetName=t, row.names=F, append=T)
+}
+```
+
+- `formatC`,`sprintf`  **C语言**风格格式。
+
+- 聚类  [选择最佳k](http://stackoverflow.com/questions/15376075/cluster-analysis-in-r-determine-the-optimal-number-of-clusters?rq=1),   [变量选择及思路介绍sas](http://blog.sina.com.cn/s/blog_5d3b177c0100equm.html), [sas聚类](http://493420337.iteye.com/blog/836393)
+
+- 包`stringi`处理编码。

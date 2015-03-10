@@ -338,3 +338,14 @@ for (t in test){
 - 聚类  [选择最佳k](http://stackoverflow.com/questions/15376075/cluster-analysis-in-r-determine-the-optimal-number-of-clusters?rq=1),   [变量选择及思路介绍sas](http://blog.sina.com.cn/s/blog_5d3b177c0100equm.html), [sas聚类](http://493420337.iteye.com/blog/836393)
 
 - 包`stringi`处理编码。
+
+- windows上连接sqlserver数据库  
+```r
+library(RODBC)
+a1 <- odbcDriverConnect(connection="server=111.111.10.11; database=sdf; uid=sa;
+                        pwd=*********;driver={SQL Server};")
+bigodata_appdata <- sqlQuery(a1, 'select * from data', stringsAsFactors = F)
+odbcClose(a1)
+```
+
+- `do.call(grid.arrange, c(gt, ncol=4, nrow=4))` 原来list里还能设置参数。

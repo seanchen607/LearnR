@@ -349,3 +349,20 @@ odbcClose(a1)
 ```
 
 - `do.call(grid.arrange, c(gt, ncol=4, nrow=4))` 原来list里还能设置参数。
+
+- [Plot matrix with the R package GGally](https://tgmstat.wordpress.com/2013/11/13/plot-matrix-with-the-r-package-ggally/)
+
+- 在windows系统上更新R  
+```r
+install.packages("installr"); 
+library(installr)
+updateR() # updating R
+```
+- 比较日期   
+```r
+ymd('2013-12-31')-months(1)
+ymd('2013-01-01') > '2013-01-01'
+as.POSIXct('2013-01-01') > '2013-01-01'
+ymd('2013-01-01') > '2013-01-02'
+比较日期的时候as.POSIXct转化
+```

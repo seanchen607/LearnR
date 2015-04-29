@@ -366,3 +366,39 @@ as.POSIXct('2013-01-01') > '2013-01-01'
 ymd('2013-01-01') > '2013-01-02'
 比较日期的时候as.POSIXct转化
 ```
+
+- [将数据中的因子变量改为字符串](http://stackoverflow.com/questions/2851015/convert-data-frame-columns-from-factors-to-characters)
+```r
+bob <- data.frame(lapply(bob, as.character), stringsAsFactors=FALSE)
+bob[] <- lapply(bob, as.character) # 数值型的也会变为字符
+# 只改变是因子的变量
+i <- sapply(bob, is.factor)
+bob[i] <- lapply(bob[i], as.character)
+```
+- 在centos6.x中安装R
+```r
+sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+sudo yum install R
+```
+- 在window中添加环境变量
+```r
+R.home('bin')
+```
+- [在Linux中安装rJava](http://stackoverflow.com/questions/3311940/r-rjava-package-install-failing)
+
+- 使用RJDBC或RHive连接hive
+```r
+Sys.setenv(HADOOP_HOME="/opt/cloudera/parcels/CDH/lib/hadoop")
+Sys.setenv(HIVE_HOME="/opt/cloudera/parcels/CDH/lib/hive")
+
+library(RHive)
+rhive.init()
+
+library(RJDBC)
+options( java.parameters = "-Xmx8g" )
+drv <- JDBC("org.apache.hive.jdbc.HiveDriver", "/opt/cloudera/parcels/CDH/lib/hive/lib/hive-jdbc.jar") # jdbc
+conn <- dbConnect(drv, "jdbc:hive2://111.111.11.11:10000/mydatabase", "**", "*********") # jdbc
+
+rhive.connect('111.111.11.11',defaultFS='hdfs://namenode1:8020',hiveServer2=T,user='***', password='*********') # rhive
+
+```

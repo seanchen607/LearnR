@@ -228,8 +228,12 @@ h2 <- ddply(y77, c("lr_c", "value_c"), summarise, qj = as.data.frame(table(y77$l
 
 - 训练了一个模型，`ls(modelFit)`来查看里面有些什么东西。
 
-- 正则表达式 
-
+- 正则表达式 A character class is a list of characters enclosed between [ and ] which matches any single character in that list;
+Two regular expressions may be joined by the infix operator |;
+```r
+# 用|和()来多个条件匹配
+grepl('(Eastern Europe)|(Eastern Erope)', train$Main.Markets, ignore.case = T)
+```
 1、元字符 `. \ | ( ) [ { $ * + ?` 用`\\.`来表示. 用`\\\\`来表示\
 
 2、The truth is that regmatches() is the only function that is designed to work with regex patterns. regmatches() extract or replace matches use with data from regexpr(),
@@ -257,6 +261,12 @@ n2$colour <- sapply(m, function(x) x[2])
 像'ÖÐÎÄ1'这种样子的乱码是因为原来的编码就是GBK，读进来之后要用`iconv(xxx,"GBK","UTF-8")`转成UTF-8，然后就正常了。像'ï»¿ä¸­æ–‡1'这样的乱码说明原文本是UTF-8，但是在当前R环境下Encoding不正常，需要`Encoding(xxx) <- "UTF-8"`，然后再操作
 
 - `dplyr`包
+
+```r
+tally(group_by(batting_tbl, yearID), sort = TRUE) # 等价于
+batting_tbl %>% group_by(yearID) %>% summarise(f=n()) %>% arrange(desc(f)) # 等价于
+batting_tbl %>% count(yearID, sort = TRUE)
+```
 ```r
 summarise_each(funs(mean), Cancelled, Diverted) 
 summarise_each(funs(min(., na.rm=TRUE), max(., na.rm=TRUE)), matches("Delay")) #allows you to apply the same summary function to multiple columns at once
@@ -361,11 +371,21 @@ updateR() # updating R
 - 比较日期   
 ```r
 ymd('2013-12-31')-months(1)
+ymd('2013-12-31')-duration(num=1, units="months")
 ymd('2013-01-01') > '2013-01-01'
 as.POSIXct('2013-01-01') > '2013-01-01'
 ymd('2013-01-01') > '2013-01-02'
 比较日期的时候as.POSIXct转化
 ```
+- 时间
+`ymd`和`as.POSIXct`转换成的日期时区不同，`ymd`是UTC（Universal Time Coordinated 世界协调时间），时间比北京时间晚8小时；`as.POSIXct`是CST（China Standard Time），应该是与操作系统的时区一致。
+```r
+ymd('2015-05-20') == as.POSIXct('2015-05-20')
+# [1] FALSE
+ymd('2015-05-20') > as.POSIXct('2015-05-20')
+# [1] TRUE
+```
+
 
 - [将数据中的因子变量改为字符串](http://stackoverflow.com/questions/2851015/convert-data-frame-columns-from-factors-to-characters)
 ```r
@@ -401,4 +421,40 @@ conn <- dbConnect(drv, "jdbc:hive2://111.111.11.11:10000/mydatabase", "**", "***
 
 rhive.connect('111.111.11.11',defaultFS='hdfs://namenode1:8020',hiveServer2=T,user='***', password='*********') # rhive
 
+```
+
+- RJDBC连接sql server，下载[sqljdbc4.jar](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=11774)，但是库里的日期导进来会变成字符，而RODBC不是这样
+```r
+library(RJDBC)
+drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver" , "/root/sqljdbc4.jar")
+conn1 <- dbConnect(drv, "jdbc:sqlserver://111.111.11.11;databaseName=Aptamil_Ofusion_ODS", "**", "****")
+```
+- `readr`包：
+readr不用再写stringsAsFactors = FALSE了，不会变为因子
+可以读取压缩文件
+col_names: 相当于base中header，TRUE; FALSE; 自己指定
+col_types: 相当于base中的colClasses
+progress：显示加载进度，如果读取时间超过5s
+永远不会自动将字符型转为因子
+会显示前10行
+永远不会设置row names
+```r
+read_csv("iris.csv", col_types = list(
+  Sepal.Length = col_double(),
+  Sepal.Width = col_double(),
+  Petal.Length = col_double(),
+  Petal.Width = col_double(),
+  Species = col_factor(c("setosa", "versicolor", "virginica"))
+))
+```
+
+- 指定读取数据时日期的格式
+```r
+setAs("character","myDate", function(from) as.Date(from, format="%d/%m/%Y") )
+
+tmp <- c("1, 15/08/2008", "2, 23/05/2010")
+con <- textConnection(tmp)
+
+tmp2 <- read.csv(con, colClasses=c('numeric','myDate'), header=FALSE)
+str(tmp2)
 ```

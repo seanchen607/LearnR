@@ -458,3 +458,53 @@ con <- textConnection(tmp)
 tmp2 <- read.csv(con, colClasses=c('numeric','myDate'), header=FALSE)
 str(tmp2)
 ```
+- 在linux上使用ODBC来读取sqlserver数据
+用R在Linux下连接MSSQL，需要安装
+```bash
+apt-get install libiodbc2-dev
+apt-get install libiodbc2
+apt-get install unixodbc-dev
+apt-get install libmyodbc
+apt-get install tdsodbc
+```
+
+安装freetds
+解压后，执行命令
+```bash
+./configure --prefix=/usr/local/freetds
+make
+sudo make install
+```
+需要配置freeTDS.conf、odbcinst.ini、odbc.ini这3个文件
+freetds.conf 路径是：/usr/local/freetds/etc/freetds.conf
+```
+# A typical Microsoft server
+[test]
+host = 115.29.201.33
+port = 1433
+tds version = 7.0
+```
+/etc/odbcinst.ini
+```
+[test]
+Description   = FreeTDS unixODBC Driver
+Driver        = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+Setup         = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+```
+/etc/odbc.ini
+```
+[test]
+Description = Shiny testing
+Driver = FreeTDS
+# TDS-Version = 7.2
+TDS_Version = 8.0
+Trace = No
+Server = 115.29.201.33
+Database = mydatabase
+port = 1433
+```
+[报错修改](http://stackoverflow.com/questions/24493749/rodbc-ms-sql-access-from-ubuntu-using-freetds)
+`conn <- odbcConnect("test", "uname", "passwd")`
+
+
+

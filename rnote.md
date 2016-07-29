@@ -178,10 +178,15 @@ unclass(p)
 >strptime()根据你指定的格式控制字符串解读日期。strptime is a function to directly convert character vectors (of a variety of formats) to POSIXlt format.  
 >strftime()则根据你指定的格式控制字符串输出日期。
 
-生成连续的时间
+生成连续的时间?`seq.Date`
 ```r
 seq(ISOdate(2010,1,1), by='day', length=365)
-seq(ymd('2014-01-01'), ymd('2014-03-02'), by = ddays(3))
+seq(ymd('2014-01-01'), ymd('2014-03-02'), by = ddays(3)) # 现在运行不了了
+seq(as.Date('2011-01-01'),as.Date('2011-01-31'),by = 1)
+as.Date("2000-01-01") + 0:10
+xts::timeBasedSeq("2011-08-01::2011-08-31")
+seq(ymd('2012-04-07'),ymd('2013-03-22'), by = '1 week')
+seq(ymd('2012-04-07'),ymd('2013-03-22'), by = 'weeks')
 ```
 
 计算年龄  
